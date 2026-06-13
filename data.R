@@ -98,21 +98,40 @@ usa_gen_wide <- usa_gen_1 |>
 # to understand what I'm fetching
 View(pums_variables)
 
-# initial
+# initial "SERIALNO"?
 vars_micro <- c("SEX", "AGEP", "HHT", "SCHL", "ADJINC", 
-                "FINCP", "HINCP", "INTP", "SERIALNO", 
-                "MIGSP", "GRPIP", "PINCP", "SVAL", "SRNT",
-                "TEN", "VACS", "ESR", "VALP")
+                "FINCP", "HINCP", "INTP", "PUMA20", "REGION",
+                "MIGSP", "MIGPUMA20", "ST", "GRPIP", "PINCP", "SVAL", "SRNT",
+                "TEN", "VACS", "ESR", "VALP", "RELSHIPP")
+
+states <- c("HI")
 
 micro_hi <- get_pums(
   variables = vars_micro,
-  state = "HI",
+  state = states,
   survey = "acs5",
+  return_vacant = FALSE,
   year = 2022,
-  recode = TRUE
-)
+  rep_weights = "housing"
+) 
+
+micro_hi <- micro_hi |>
+  distinct(SERIALNO, .keep_all = TRUE) # TO GET TO HOUSEHOLD WEIGHTS ??
 
 # we can cross tabulate and make tables of our own.
+library(survey)
+library(srvyr)
 
+hi_survey <- micro_hi %>%
+  to_survey(type = "housing", 
+            design = "rep_weights")
+
+class(hi_survey)
+
+# simple survey counts:
+hi_survey |>
+  survey_count(MIGPUMA20)
+
+# how many people left based on their income greater than 200k AGI?
 
 

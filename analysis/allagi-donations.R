@@ -26,7 +26,6 @@ mapview(hawaii_zctas) # looks fine, we are missing some because of the SOI eligi
 # plot(haw_income["estimate"])
 
 # read online rather than local
-# df <- read.csv("data/22zpallagi.csv")
 df <- read.csv("https://www.irs.gov/pub/irs-soi/22zpallagi.csv")
 zips <- read.csv("data/simplemaps_uszips_basicv1.94/uszips.csv") |>
   rename(zipcode = zip)

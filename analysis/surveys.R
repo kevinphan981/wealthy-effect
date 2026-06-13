@@ -1,6 +1,7 @@
 library(tidyverse)
 library(survey)
 library(tidycensus)
+library(srvyr)
 
 # should just read the other data file in order to get the env set up
 # source("data.R"
@@ -15,9 +16,19 @@ model1 <- lm("B17001_002 ~ B19013_001 + B25077_001", data = usa_gen_wide)
 
 summary(model1)
 
-
 # Education's return on income
 summary(lm(log(B19013_001) ~ B23025_002 + B19057_001 + B01003_001, data = usa_gen_wide))
 
 # Education's effect on poverty ( Wald/instrumental variable setup possible )
 summary(lm(log(B17001_001) ~ B23025_002 + B19013_001, data = usa_gen_wide))
+
+
+# ------------------- microdata-based models ---------------------------
+
+# tenure TEN dependent, want to measure the effect of Household income HINCP
+mp_m1 <- svyglm(TEN ~ SEX + SCHL + HINCP + ESR,
+  design = hi_survey,
+  weights = ~pw
+)
+
+summary(mp_m1)
