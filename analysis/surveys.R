@@ -2,6 +2,7 @@ library(tidyverse)
 library(survey)
 library(tidycensus)
 library(srvyr)
+library(fixest)
 
 # should just read the other data file in order to get the env set up
 # source("data.R"
@@ -25,6 +26,8 @@ summary(lm(log(B17001_001) ~ B23025_002 + B19013_001, data = usa_gen_wide))
 
 # ------------------- microdata-based models ---------------------------
 
+# ensure that the data is transformed correctly before deploying models
+
 # tenure TEN dependent, want to measure the effect of Household income HINCP
 mp_m1 <- svyglm(TEN ~ SEX + SCHL + HINCP + ESR,
   design = hi_survey,
@@ -32,3 +35,6 @@ mp_m1 <- svyglm(TEN ~ SEX + SCHL + HINCP + ESR,
 )
 
 summary(mp_m1)
+
+
+
