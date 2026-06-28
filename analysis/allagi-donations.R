@@ -75,7 +75,8 @@ df_hawaii <- df |>
   filter(STATE == "HI") |>
   group_by(agi_stub) |>
   mutate(percentile = rank(A19700)/length(A19700) * 100,
-         agi_stub_str = as.character(agi_stub))
+         agi_stub_str = as.character(agi_stub),
+         taxes_per_return = A10300/N10300)
 
 (
   ggplot(data = df_hawaii, aes(x = percentile, y = A19700, fill = agi_stub_str)) +

@@ -6,12 +6,19 @@ We can also do things involved with migration because of this.
 
 ## KPIs and Effects to Measure
 When we ask ourselves "Can rich people be good for the local community?" it usually boils down to three options:
-1. Increased public amenities through increased tax incidence
-2. Better job market prospects through increased consumption/job creation.
-3. Philanthropic contributions that affect the community in some non-quantifiable way.
+1. Increased public amenities through increased tax incidence (NOT POSSIBLE?)
+2. Better job market prospects through increased consumption/job creation (Possible)
+3. Philanthropic contributions that affect the community in some non-quantifiable way. (Purely Descriptive)
 
 Thus, we should aim to have something near-causal, definitely correlational. I think it is practically impossible
 coming up with something good to be causal here.
 
+## TODO
+
+1. Make bartik shift-share instrument by crosswalking older LODES and then creating shares
+2. Do IV on cross-section (this is the best we can do given how bad the data is)
+2.5. Run some more models that are spatially oriented, or at the very least try to make things interesting
+3. Make some maps and visuals and slap them in the report. Maybe link it to some site using shiny or something
+4. Gather some facts about the PEOPLE using the PUMS (again, difficult because things must be anonymized)
 
 

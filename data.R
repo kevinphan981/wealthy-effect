@@ -86,20 +86,21 @@ gen_wide <- gen_data |>
   )
 
 
+# --------------- two versions, one for regression, one for plotting ---------
 haw_gen <- get_acs(
   geography = "tract",
   state = "HI",
   variables = vars,
   year = 2023,
   survey = "acs5",
-  geometry = TRUE
+  # geometry = TRUE
 ) |>
   mutate(coeff_var = (moe/(1.645*estimate)) * 100) |>
   filter(coeff_var < 25)
 
 haw_gen_wide <- haw_gen |> 
   pivot_wider(
-    id_cols = c(GEOID, NAME, GEOMETRY),
+    id_cols = c(GEOID, NAME),
     names_from = variable,
     values_from = estimate
   )
@@ -109,19 +110,40 @@ library(readr)
 xwalk <- read_csv("https://lehd.ces.census.gov/data/lodes/LODES8/hi/hi_xwalk.csv.gz") |>
   select(tabblk2020, trct)  # or stplc for places
 
+wac_hi <- read.csv("data/LEHD-data/WAC.csv") |>
+  mutate(year = as.character(year))
 rac_hi <- read.csv("data/LEHD-data/RAC.csv") |>
   mutate(year = as.character(year))
 
-rac_tract <- rac_hi|>
-  left_join(xwalk, by = c("h_geocode" = "tabblk2020")) |>
-  group_by(trct) |>
-  select(!h_geocode) |> #not needed
-  summarise(across(where(is.numeric), \(x) sum(x, na.rm = TRUE))) |>
-  mutate(trct = as.character(trct))
+crosswalk <- function(df, xwalk) {
+  df_f <- df |>
+    left_join(xwalk, by = c("h_geocode" = "tabblk2020")) |>
+    group_by(trct) |>
+    select(!h_geocode) |> #not needed
+    summarise(across(where(is.numeric), \(x) sum(x, na.rm = TRUE))) |>
+    mutate(trct = as.character(trct))
+  
+  return(df_f)
+}
+
+# rac_tract <- rac_hi|>
+#   left_join(xwalk, by = c("h_geocode" = "tabblk2020")) |>
+#   group_by(trct) |>
+#   select(!h_geocode) |> #not needed
+#   summarise(across(where(is.numeric), \(x) sum(x, na.rm = TRUE))) |>
+#   mutate(trct = as.character(trct))
+
+rac_tract = crosswalk(rac_hi, xwalk)
+
+rac_tract[, paste0(names(rac_hi), "_r")] <- rac_tract
 
 haw_gen_complete <- haw_gen_wide |>
-  left_join(rac_tract, by = c("GEOID" = 'trct'))
+  left_join(rac_tract, by = c("GEOID" = 'trct_r'))
 
+
+
+
+# --------------- second part, getting general data for plots ---------------
 usa_gen <- get_acs(
   geography = "zcta",
   variables = vars, 
