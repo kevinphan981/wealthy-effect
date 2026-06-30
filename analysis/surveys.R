@@ -14,6 +14,10 @@ library(corrplot)
 
 
 # some basic things
+
+haw_gen_complete <- haw_gen_complete |>
+  mutate(wealth = B19080_005/B19083_001)
+
 haw_gen_num <- haw_gen_complete |>
   select(-c('GEOID', 'NAME'))
 
@@ -29,9 +33,37 @@ haw_gen_complete |>
 
 summary(lm(formula = "C000 ~ B19083_001", data = haw_gen_complete))
 
+# are wealthier areas necessarily more unequal?
+haw_gen_complete |>
+  ggplot(aes(x = B19083_001, y = B19013_001)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(x = "Gini Coefficient, 0-1", y = "Median Household Income")
+# quite homogenous areas, which makes sense given the living dynamics...
+
+haw_gen_complete |>
+  ggplot(aes(x = B19083_001, y = B19080_005)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(x = "Gini Coefficient, 0-1", y = "Lower Limit for Top 5%")
+
+
+haw_gen_complete |>
+  ggplot(aes(x = wealth, y = C000)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(x = "Wealthy People Index", y = "Resided Workers in Given Area")
+
+summary(lm("C000 ~ wealth", data = haw_gen_complete))
+
+# the number of workers that live in an area do not have anything to do with the unemployment rate...
+summary(lm("DP03_0009P ~ C000", data = haw_gen_complete))
+
+summary(lm("DP03_0009P ~ wealth + B17001_002 + S1501_C02_015 + B11007_001 + B25056_001", data = haw_gen_complete))
 
 plot(haw_gen_complete$B19083_001, haw_gen_complete$C000)
 # 1. basic linear regressions to find relationships
+
 # Travel time as outcome—does longer commute correlate with lower income?
 model1 <- lm("B17001_002 ~ B19013_001 + B25077_001", data = usa_gen_wide)
 
@@ -43,6 +75,8 @@ summary(lm(log(B19013_001) ~ B23025_002 + B19057_001 + B01003_001, data = usa_ge
 # Education's effect on poverty ( Wald/instrumental variable setup possible )
 summary(lm(log(B17001_001) ~ B23025_002 + B19013_001, data = usa_gen_wide))
 
+
+# Do wealthier areas impact unemployment?
 
 # ------------------- microdata-based models ---------------------------
 
