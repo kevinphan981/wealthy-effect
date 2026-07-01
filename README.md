@@ -22,3 +22,6 @@ coming up with something good to be causal here.
 4. Gather some facts about the PEOPLE using the PUMS (again, difficult because things must be anonymized)
 
 
+## External Sources
+https://realproperty.honolulu.gov/media/eombhyp2/zoning.pdf
+https://files.hawaii.gov/dbedt/op/gis/data/cty_zoning_haw.pdf
