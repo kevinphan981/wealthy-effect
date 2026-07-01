@@ -8,6 +8,28 @@ options(tigris_use_cache = TRUE)
 
 
 
+zips <- read.csv("data/simplemaps_uszips_basicv1.94/uszips.csv") |>
+  rename(zipcode = zip)
+
+hawaii_zips <- zips |> filter(state_id == "HI") |> select(zipcode)
+
+hawaii_zctas <- zctas(
+  cb = TRUE, 
+  starts_with = c("967", "968", "999"),
+  # state = "HI",
+  year = 2020
+) |>
+  mutate(zipcode = as.integer(NAME20))
+
+usa_zctas <- zctas(
+  cb = TRUE,
+  year = 2020
+) |>   mutate(zipcode = as.integer(NAME20))
+
+
+hawaii_zctas <- hawaii_zctas |>
+  inner_join(hawaii_zips, by = "zipcode")
+
 
 # --------------- second part, getting general data for plots ---------------
 usa_gen <- get_acs(
